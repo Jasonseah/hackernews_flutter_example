@@ -1,2 +1,2 @@
-# hackernews_flutter_example
-an example of how to build a hacker news app by using flutter
+# Hackernews Flutter
+an example of how to build a hackernews app by using flutter
