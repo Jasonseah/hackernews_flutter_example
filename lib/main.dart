@@ -1,5 +1,8 @@
+import 'package:hackernews/services/news.dart';
 import 'routes.dart';
 
-void main () {
+NewsService newsService = new NewsService();
+
+void main() {
   new Routes();
 }
