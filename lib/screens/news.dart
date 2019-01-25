@@ -3,6 +3,29 @@ import 'package:flutter/widgets.dart';
 import 'package:hackernews/data/news.dart';
 import 'package:hackernews/main.dart';
 import 'package:hackernews/widgets/darwer_widget.dart';
+import 'package:flutter_inappbrowser/flutter_inappbrowser.dart';
+
+class MyInAppBrowser extends InAppBrowser {
+  @override
+  void onLoadStart(String url) {
+    super.onLoadStart(url);
+    print("\n\nStarted $url\n\n");
+  }
+
+  @override
+  void onLoadStop(String url) {
+    super.onLoadStop(url);
+    print("\n\nStopped $url\n\n");
+  }
+
+  @override
+  void onExit() {
+    super.onExit();
+    print("\n\nBrowser closed!\n\n");
+  }
+}
+
+MyInAppBrowser inAppBrowser = new MyInAppBrowser();
 
 class NewsPage extends StatelessWidget {
   @override
@@ -10,9 +33,6 @@ class NewsPage extends StatelessWidget {
     var futureBuilder = new FutureBuilder(
       future: newsService.fetchNewsList(0),
       builder: (BuildContext context, AsyncSnapshot snapshot) {
-        print(snapshot.connectionState);
-        print('hey');
-
         switch (snapshot.connectionState) {
           case ConnectionState.none:
           case ConnectionState.waiting:
@@ -86,7 +106,15 @@ class _NewsListState extends State<NewsList> {
               new ListTile(
                   title: new Text(newsItem.title),
                   subtitle: new Text('by ' + newsItem.by + ' | ' + newsItem
-                      .getTimeDiffInHuman())),
+                      .getTimeDiffInHuman()),
+                  onTap: () {
+                    inAppBrowser.open(url: newsItem.url, options: {
+                      "useShouldOverrideUrlLoading": true,
+                      "useOnLoadResource": true
+                    });
+                  }
+              ),
+
               new Divider(
                 height: 2.0,
               ),
