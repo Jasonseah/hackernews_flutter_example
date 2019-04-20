@@ -23,6 +23,13 @@ class MyInAppBrowser extends InAppBrowser {
     super.onExit();
     print("\n\nBrowser closed!\n\n");
   }
+
+  @override
+  void onLoadError(String url, int code, String message) {
+    print("url $url");
+    print("code $code");
+    print("message $message");
+  }
 }
 
 MyInAppBrowser inAppBrowser = new MyInAppBrowser();
@@ -74,7 +81,8 @@ class _NewsListState extends State<NewsList> {
 
   @override
   void initState() {
-    controller = new ScrollController()..addListener(_scrollListener);
+    controller = new ScrollController()
+      ..addListener(_scrollListener);
     news = widget.news;
     super.initState();
   }
@@ -112,8 +120,9 @@ class _NewsListState extends State<NewsList> {
                       .getTimeDiffInHuman()),
                   onTap: () {
                     inAppBrowser.open(url: newsItem.url, options: {
-                      "useShouldOverrideUrlLoading": true,
-                      "useOnLoadResource": true
+                      "useShouldOverrideUrlLoading": false,
+                      "useOnLoadResource": false,
+                      "hideUrlBar": true,
                     });
                   }
               ),
