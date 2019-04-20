@@ -11,15 +11,7 @@ class NewsService {
       throw Exception('End of post');
     }
 
-    if (newsList.isNotEmpty) {
-      var testNews = Stream.fromIterable(newsList.skip(skipItems).take(20))
-          .asyncMap((id) => this.fetchNewsDetails(id))
-          .toList();
-
-      return testNews;
-    } else {
-      return getNewsList(skipItems);
-    }
+    return this.getNewsList(skipItems);
   }
 
   Future<List<News>> getNewsList(skipItems) async {
@@ -31,12 +23,15 @@ class NewsService {
       var responseNewsList = json.decode(response.body);
       newsList = responseNewsList as List;
 
-      var resNewsList = Stream.fromIterable(
-              (responseNewsList as List).skip(skipItems).take(20))
-          .asyncMap((id) => this.fetchNewsDetails(id))
-          .toList();
 
-      return resNewsList;
+      var resNewsList = newsList
+          .skip(skipItems)
+          .take(20)
+          .map((s) => this.fetchNewsDetails(s.toString()));
+
+      return Future.wait(resNewsList).then((List<News> responses) {
+        return responses.toList();
+      });
     } else {
       // If that call was not successful, throw an error.
       throw Exception('Failed to load post');

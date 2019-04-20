@@ -41,7 +41,7 @@ class NewsPage extends StatelessWidget {
                 child: CircularProgressIndicator());
           default:
             if (snapshot.hasError)
-              return new Text('Error: ${snapshot.error}');
+              return new Text('No internet connection, please try again later');
             else
               return NewsList(news: snapshot.data);
         }
@@ -51,7 +51,7 @@ class NewsPage extends StatelessWidget {
     return Scaffold(
         drawer: new DrawerWidget(),
         appBar: AppBar(
-          title: Text('News'),
+          title: Text('Front Page'),
         ),
         body: new Scrollbar(child: futureBuilder));
   }
@@ -93,12 +93,15 @@ class _NewsListState extends State<NewsList> {
       itemBuilder: (BuildContext context, int index) {
         final newsItem = news[index];
         if (newsItem is LoadingItem) {
-          return new Column(
-            children: <Widget>[
-              Align(
+          return new Center(
+            child: Container(
+              height: 100.0,
+              padding: EdgeInsets.all(8.0),
+              width: 100.0,
+              child: Align(
                   alignment: Alignment.center,
-                  child: CircularProgressIndicator())
-            ],
+                  child: CircularProgressIndicator()),
+            ),
           );
         } else {
           return new Column(

@@ -31,8 +31,8 @@ class News {
     );
   }
 
-  getTimeDiffInHuman(){
-    if(this.time == null){
+  getTimeDiffInHuman() {
+    if (this.time == null) {
       return null;
     }
 
