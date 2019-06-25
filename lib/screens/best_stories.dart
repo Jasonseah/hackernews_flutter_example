@@ -7,11 +7,13 @@ import 'package:hackernews/widgets/in_app_brower.dart';
 
 MyInAppBrowser inAppBrowser = new MyInAppBrowser();
 
-class NewsPage extends StatelessWidget {
+class BestStoriesPage extends StatelessWidget {
+  static const title = 'Best Stories';
+
   @override
   Widget build(BuildContext context) {
     var futureBuilder = new FutureBuilder(
-      future: newsService.fetchNewsList(0),
+      future: bestStoriesService.fetchBestStoryList(0),
       builder: (BuildContext context, AsyncSnapshot snapshot) {
         switch (snapshot.connectionState) {
           case ConnectionState.none:
@@ -20,16 +22,17 @@ class NewsPage extends StatelessWidget {
                 alignment: Alignment.center,
                 child: CircularProgressIndicator());
           default:
-            if (snapshot.hasError)
+            if (snapshot.hasError) {
               return new Text('No internet connection, please try again later');
-            else
+            } else {
               return NewsList(news: snapshot.data);
+            }
         }
       },
     );
 
     return AdaptivePageScaffold(
-        title: 'Front Page', child: new Scrollbar(child: futureBuilder));
+        title: 'Best Stories', child: new Scrollbar(child: futureBuilder));
   }
 }
 
@@ -102,7 +105,7 @@ class _NewsListState extends State<NewsList> {
         loadedPage = loadedPage + 1;
         setState(() => news.add(LoadingItem()));
 
-        newsService.fetchNewsList(loadedPage).then((newsObject) {
+        bestStoriesService.fetchBestStoryList(loadedPage).then((newsObject) {
           news.removeLast();
           setState(() => news.addAll(newsObject));
           loadingList = false;
